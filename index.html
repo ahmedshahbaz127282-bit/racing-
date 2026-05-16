@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Racing Game</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0a0a0a;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    header {
+      background: linear-gradient(135deg, #e63946, #f4a261);
+      padding: 60px 20px;
+    }
+    header h1 {
+      font-size: 3em;
+      letter-spacing: 4px;
+      text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+    }
+    header p {
+      font-size: 1.2em;
+      margin-top: 10px;
+      opacity: 0.9;
+    }
+    .btn {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 15px 40px;
+      background: white;
+      color: #e63946;
+      font-size: 1.2em;
+      font-weight: bold;
+      border-radius: 30px;
+      text-decoration: none;
+    }
+    .features {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 50px 20px;
+    }
+    .card {
+      background: #1a1a2e;
+      border-radius: 16px;
+      padding: 30px;
+      width: 250px;
+    }
+    .card h3 { font-size: 1.4em; margin-bottom: 10px; }
+    .card p { opacity: 0.7; line-height: 1.6; }
+    .how-to {
+      background: #111;
+      padding: 50px 20px;
+    }
+    .how-to h2 {
+      font-size: 2em;
+      margin-bottom: 30px;
+      color: #f4a261;
+    }
+    .steps {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+    .step {
+      background: #1a1a2e;
+      border-radius: 12px;
+      padding: 20px;
+      width: 200px;
+    }
+    .step span {
+      font-size: 2em;
+    }
+    .step p {
+      margin-top: 10px;
+      opacity: 0.8;
+    }
+    footer {
+      padding: 30px;
+      opacity: 0.5;
+      font-size: 0.9em;
+      border-top: 1px solid #222;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🏎️ RACING GAME</h1>
+    <p>Dodge enemies. Beat your score. How far can you go?</p>
+    <a class="btn" href="#">📲 Download APK</a>
+  </header>
+
+  <section class="features">
+    <div class="card">
+      <h3>🚗 Fast Cars</h3>
+      <p>Control your car and dodge incoming enemies at high speed.</p>
+    </div>
+    <div class="card">
+      <h3>🏆 High Score</h3>
+      <p>Every dodge earns you points. Beat your personal best!</p>
+    </div>
+    <div class="card">
+      <h3>⚡ Gets Harder</h3>
+      <p>Enemies get faster every round. Stay sharp!</p>
+    </div>
+  </section>
+
+  <section class="how-to">
+    <h2>How To Play</h2>
+    <div class="steps">
+      <div class="step">
+        <span>⬅️➡️</span>
+        <p>Tap LEFT or RIGHT to move your car</p>
+      </div>
+      <div class="step">
+        <span>🚨</span>
+        <p>Avoid the red enemy cars coming at you</p>
+      </div>
+      <div class="step">
+        <span>🏅</span>
+        <p>Each dodge adds to your score</p>
+      </div>
+      <div class="step">
+        <span>💥</span>
+        <p>Game over if you crash!</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>🏎️ Racing Game — Made with ❤️ using Kotlin & Android Studio</p>
+  </footer>
+
+</body>
+  </html>
