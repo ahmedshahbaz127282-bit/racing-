@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Racing Game</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0d0000; color: white; font-family: Arial, sans-serif; text-align: center; }
+    header { background: linear-gradient(135deg, #ff0000, #8b0000); padding: 40px 20px; }
+    header h1 { font-size: 2.5em; letter-spacing: 4px; text-shadow: 0 0 20px #ff0000; }
+    canvas { border-radius: 12px; display: block; margin: 0 auto; background: #2a2a2a; }
+    .controls { display: flex; justify-content: center; gap: 20px; margin-top: 20px; }
+    .ctrl-btn {
+      padding: 20px 40px;
+      font-size: 1.5em;
+      background: #cc0000;
+      color: white;
+      border: none;
+      border-radius: 16px;
+    }
+    .restart-btn { display: none; margin: 15px auto; padding: 12px 30px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🏎️ RACING GAME</h1>
+</header>
+
+<div class="score-box">Score: <span id="score">0</span></div>
+<canvas id="gameCanvas" width="320" height="480"></canvas>
+<button id="restartBtn" class="restart-btn" onclick="restartGame()">Play Again</button>
+
+<div class="controls">
+  <button id="leftBtn" class="ctrl-btn">⬅️</button>
+  <button id="rightBtn" class="ctrl-btn">➡️</button>
+</div>
+
+<script>
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+// 🚗 ENGINE SOUND
+let engineOsc, engineGain;
+
+function startEngineSound() {
+  engineOsc = audioCtx.createOscillator();
+  engineGain = audioCtx.createGain();
+
+  engineOsc.type = 'sawtooth';
+  engineOsc.frequency.setValueAtTime(80, audioCtx.currentTime);
+
+  engineOsc.connect(engineGain);
+  engineGain.connect(audioCtx.destination);
+
+  engineGain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+
+  engineOsc.start();
+}
+
+function updateEngineSound() {
+  if (!engineOsc) return;
+  engineOsc.frequency.setValueAtTime(80 + enemySpeed * 10, audioCtx.currentTime);
+}
+
+function stopEngineSound() {
+  if (engineOsc) {
+    engineOsc.stop();
+    engineOsc = null;
+  }
+}
+
+// 💥 Crash sound (kept)
+function playCrashSound() {
+  const bufferSize = audioCtx.sampleRate * 0.6;
+  const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) {
+    data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 2);
+  }
+  const source = audioCtx.createBufferSource();
+  source.buffer = buffer;
+
+  const gainNode = audioCtx.createGain();
+  gainNode.gain.setValueAtTime(1.5, audioCtx.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
+
+  source.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
+  source.start();
+}
+
+let playerX = 130, score = 0, gameOver = false;
+let enemyX = 100, enemyY = -100, enemySpeed = 5;
+
+const playerW = 50, playerH = 80;
+const enemyW = 50, enemyH = 80;
+const playerY = canvas.height - 120;
+
+let leftHeld = false, rightHeld = false;
+
+function update() {
+  if (gameOver) return;
+
+  updateEngineSound();
+
+  if (leftHeld) playerX -= 8;
+  if (rightHeld) playerX += 8;
+
+  enemyY += enemySpeed;
+
+  if (enemyY > canvas.height) {
+    enemyY = -100;
+    enemyX = Math.random() * (canvas.width - enemyW);
+    score++;
+    document.getElementById('score').textContent = score;
+    enemySpeed += 0.3;
+  }
+
+  // collision
+  if (
+    playerX < enemyX + enemyW &&
+    playerX + playerW > enemyX &&
+    playerY < enemyY + enemyH &&
+    playerY + playerH > enemyY
+  ) {
+    gameOver = true;
+    playCrashSound();
+    stopEngineSound();
+    document.getElementById('restartBtn').style.display = 'block';
+  }
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = 'white';
+  ctx.fillRect(playerX, playerY, playerW, playerH);
+
+  ctx.fillStyle = 'red';
+  ctx.fillRect(enemyX, enemyY, enemyW, enemyH);
+
+  requestAnimationFrame(update);
+}
+
+function restartGame() {
+  playerX = 130;
+  enemyY = -100;
+  enemySpeed = 5;
+  score = 0;
+  gameOver = false;
+  document.getElementById('score').textContent = 0;
+  document.getElementById('restartBtn').style.display = 'none';
+
+  audioCtx.resume();
+  startEngineSound();
+
+  update();
+}
+
+// controls
+leftBtn.onmousedown = () => { leftHeld = true; audioCtx.resume(); startEngineSound(); };
+leftBtn.onmouseup = () => leftHeld = false;
+rightBtn.onmousedown = () => { rightHeld = true; audioCtx.resume(); startEngineSound(); };
+rightBtn.onmouseup = () => rightHeld = false;
+
+update();
+</script>
+
+</body>
+</html>
