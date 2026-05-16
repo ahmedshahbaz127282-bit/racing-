@@ -1,43 +1,36 @@
-package com.yourpackage
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
 
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import androidx.appcompat.app.AppCompatActivity
+    <com.yourpackage.RaceView
+        android:id="@+id/raceView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-class MainActivity : AppCompatActivity() {
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:padding="16dp">
 
-    lateinit var raceView: RaceView
-    val handler = Handler(Looper.getMainLooper())
-    val fps = 60L
+        <Button
+            android:id="@+id/btnLeft"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:text="⬅ LEFT"
+            android:textSize="18sp"/>
 
-    val gameLoop = object : Runnable {
-        override fun run() {
-            raceView.update()
-            raceView.invalidate()
-            handler.postDelayed(this, 1000L / fps)
-        }
-    }
+        <Button
+            android:id="@+id/btnRight"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:text="RIGHT ➡"
+            android:textSize="18sp"/>
+    </LinearLayout>
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        raceView = findViewById(R.id.raceView)
-
-        findViewById<android.widget.Button>(R.id.btnLeft).setOnClickListener {
-            raceView.moveLeft()
-        }
-
-        findViewById<android.widget.Button>(R.id.btnRight).setOnClickListener {
-            raceView.moveRight()
-        }
-
-        handler.post(gameLoop)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        handler.removeCallbacksAndMessages(null)
-    }
-}
+</FrameLayout>
